@@ -1,9 +1,9 @@
-# Static site: nothing to build, publish the repo root.
+# Static site. The build step only copies the site into dist/public, which
+# matches the publish directory configured in the Netlify dashboard; it works
+# whether or not that dashboard setting is ever cleared.
 [build]
-  publish = "."
-  # A real (no-op) command overrides any build command left in the dashboard;
-  # an empty string would not.
-  command = "echo 'static site - nothing to build'"
+  publish = "dist/public"
+  command = "rm -rf dist && mkdir -p dist/public && cp -R index.html favicon.svg css js assets dist/public/"
 
 [[headers]]
   for = "/assets/*"
