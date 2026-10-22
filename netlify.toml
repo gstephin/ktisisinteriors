@@ -1,7 +1,9 @@
 # Static site: nothing to build, publish the repo root.
 [build]
   publish = "."
-  command = ""
+  # A real (no-op) command overrides any build command left in the dashboard;
+  # an empty string would not.
+  command = "echo 'static site - nothing to build'"
 
 [[headers]]
   for = "/assets/*"
