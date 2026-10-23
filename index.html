@@ -11,7 +11,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -26,8 +26,7 @@
   <header class="nav" id="nav">
     <a class="nav__logo" href="#top" data-magnetic>Ktisis<em>Interiors</em></a>
     <nav class="nav__links">
-      <a href="#tour">Tour</a>
-      <a href="#kitchen">Kitchens</a>
+      <a href="#vision">Vision</a>
       <a href="#services">Interiors</a>
       <a href="#process">Process</a>
       <a href="#portfolio">Projects</a>
@@ -37,30 +36,39 @@
     <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
   </header>
   <div class="menu" id="menu">
-    <a href="#tour">Tour</a><a href="#kitchen">Kitchens</a><a href="#services">Interiors</a><a href="#process">Process</a><a href="#portfolio">Projects</a><a href="#about">About</a><a href="#contact">Contact</a>
+    <a href="#vision">Vision</a><a href="#services">Interiors</a><a href="#process">Process</a><a href="#portfolio">Projects</a><a href="#about">About</a><a href="#contact">Contact</a>
   </div>
 
   <main id="top">
 
     <section class="hero" id="hero">
-      <div class="hero__media">
-        <img class="hero__img" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=2400&q=80&auto=format&fit=crop" alt="Contemporary open-plan living room with a wood-panelled TV wall and kitchen beyond" fetchpriority="high" />
-        <div class="hero__warm"></div>
-        <div class="hero__shade"></div>
-      </div>
-      <div class="hero__content">
-        <p class="eyebrow reveal-up">Modular kitchens · Wardrobes · Full-home interiors · Kochi</p>
-        <h1 class="hero__title" data-split>Kitchens built around the way you live.</h1>
-        <p class="hero__sub reveal-up">Ktisis Interiors has designed and built 250+ homes across Kochi since 2010. Every project is planned in 3D, manufactured in-house and installed by our own team.</p>
-        <div class="hero__cta reveal-up">
-          <a class="btn" href="#contact" data-magnetic>Start your design</a>
-          <a class="btn btn--ghost" href="#tour" data-magnetic>Take the tour <span class="arrow">↓</span></a>
+      <div class="hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow reveal-up">Modular kitchens · Wardrobes · Full-home interiors · Kochi</p>
+          <h1 class="hero__title" data-chars>
+            <span class="line"><i class="orb" aria-hidden="true"></i>Kitchens built</span>
+            <span class="line"><em>around the way</em></span>
+            <span class="line">you live. <i class="star" aria-hidden="true">✺</i></span>
+          </h1>
+          <p class="hero__sub reveal-up">Ktisis Interiors has designed and built 250+ homes across Kochi since 2010 — planned in 3D, made in our own workshop, installed by our own team.</p>
+          <div class="hero__cta reveal-up">
+            <a class="btn btn--accent" href="#contact" data-magnetic>Book a free site visit</a>
+            <a class="btn btn--ghost" href="#vision" data-magnetic>Explore our work <span class="arrow">→</span></a>
+          </div>
+          <div class="hero__minis">
+            <figure class="chamfer chamfer--sm" data-wipe><img src="https://images.unsplash.com/photo-1617098900591-3f90928e8c54?w=700&q=75&auto=format&fit=crop" alt="Bedroom with upholstered headboard" /></figure>
+            <figure class="chamfer chamfer--sm" data-wipe><img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=700&q=75&auto=format&fit=crop" alt="Living room with built-in TV wall" /></figure>
+            <span class="plus" aria-hidden="true">+</span>
+          </div>
+        </div>
+        <div class="hero__visual" data-parallax>
+          <figure class="chamfer chamfer--xl" data-wipe>
+            <img src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=1600&q=80&auto=format&fit=crop" alt="Handleless modular kitchen with a marble breakfast island" fetchpriority="high" />
+          </figure>
+          <div class="hero__tag reveal-up"><span>Kakkanad · 2026</span><strong>Island kitchen, champagne gloss</strong></div>
+          <div class="hero__stat reveal-up"><strong data-count="250" data-suffix="+">0</strong><span>Homes delivered</span></div>
         </div>
       </div>
-      <button class="lightswitch" id="lightswitch" aria-pressed="false" data-magnetic>
-        <span class="lightswitch__toggle"><i></i></span>
-        <span class="lightswitch__label">Turn on the lights</span>
-      </button>
       <div class="hero__scroll"><span></span></div>
     </section>
 
@@ -72,156 +80,68 @@
     </div>
 
 
-    <!-- Apartment walkthrough -->
-    <section class="tour" id="tour">
-      <div class="tour__stage" id="tourStage">
-        <div class="tour__world" id="tourWorld">
-          <div class="room room--entry" data-name="entry" data-depth="760" data-door="0.5" data-doorw="0.2" data-doorh="0.78" style="--wallc:#d9d2c8;--floorc:#cfc6b9">
-            <div class="wall wall--back"><div class="plate"><span>Ktisis Interiors</span><small>2 BHK · Apartment tour</small></div></div>
-            <div class="wall wall--left"></div><div class="wall wall--right"></div><div class="wall wall--floor"></div><div class="wall wall--ceil"></div>
-            <div class="door"><div class="door__panel"><i></i></div></div>
-          </div>
-          <div class="room room--living" data-name="living" data-depth="1800" style="--photo:url(https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=1800&q=80&auto=format&fit=crop);--wallc:#efe9df;--floorc:#e4ddd1">
-            <div class="wall wall--back"></div>
-            <div class="wall wall--left"></div><div class="wall wall--right"></div><div class="wall wall--floor"></div><div class="wall wall--ceil"></div>
-          </div>
-          <div class="room room--bed" data-name="bed" data-depth="1800" style="--photo:url(https://images.unsplash.com/photo-1617098900591-3f90928e8c54?w=1800&q=80&auto=format&fit=crop);--wallc:#efe5dc;--floorc:#d8cbbb">
-            <div class="wall wall--back"></div>
-            <div class="wall wall--left"></div><div class="wall wall--right"></div><div class="wall wall--floor"></div><div class="wall wall--ceil"></div>
-          </div>
-          <div class="room room--kitchen" data-name="kitchen" data-depth="1800" style="--photo:url(https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=1800&q=80&auto=format&fit=crop);--wallc:#e9e3d8;--floorc:#dedad3">
-            <div class="wall wall--back"></div>
-            <div class="wall wall--left"></div><div class="wall wall--right"></div><div class="wall wall--floor"></div><div class="wall wall--ceil"></div>
-          </div>
+    <!-- Vision -->
+    <section class="vision" id="vision">
+      <div class="vision__head">
+        <h2 class="vision__title" data-chars>
+          <span class="line">Bring your <span class="pill" data-pill><img src="https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?w=400&q=70&auto=format&fit=crop" alt="" /></span> home</span>
+          <span class="line"><em>to life,</em> room</span>
+          <span class="line">by <span class="pill" data-pill><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=70&auto=format&fit=crop" alt="" /></span> room.</span>
+        </h2>
+        <div class="vision__aside">
+          <p class="lead">Every Ktisis home starts as a 3D model you walk through with us — finishes, lighting and storage decided on screen, then built exactly that way.</p>
+          <a class="btn btn--small" href="#process" data-magnetic>How it works</a>
         </div>
-        <div class="tour__vignette"></div>
       </div>
 
-      <div class="tour__hud">
-        <div class="tour__caption" id="tourCaption">
-          <span class="tour__n">00</span>
-          <h3>Welcome home</h3>
-          <p>Scroll to open the door and walk through a Ktisis 2 BHK.</p>
-        </div>
-
-        <div class="tour__map" aria-hidden="true">
-          <svg viewBox="0 0 220 150" id="tourMap">
-            <g class="map__rooms">
-              <rect x="8" y="58" width="56" height="84" rx="3" data-room="living" />
-              <rect x="70" y="8" width="70" height="60" rx="3" data-room="bed" />
-              <rect x="146" y="8" width="66" height="60" rx="3" data-room="bed2" />
-              <rect x="70" y="74" width="142" height="68" rx="3" data-room="kitchen" />
-              <rect x="8" y="8" width="56" height="44" rx="3" data-room="bath" />
-            </g>
-            <g class="map__labels">
-              <text x="36" y="136">Living</text>
-              <text x="105" y="62">Bed 1</text>
-              <text x="179" y="62">Bed 2</text>
-              <text x="141" y="136">Kitchen · Dining</text>
-              <text x="36" y="46">Bath</text>
-            </g>
-            <path id="tourPath" class="map__path" d="M 36 148 L 36 100 L 60 100 L 76 72 L 100 38 L 120 38 L 120 80 L 150 110 L 190 110" />
-            <g class="map__man" id="tourMan">
-              <circle cx="0" cy="-6" r="3.2" />
-              <path class="map__leg map__leg--a" d="M0 -3 L-2.5 4" />
-              <path class="map__leg map__leg--b" d="M0 -3 L2.5 4" />
-              <circle class="map__pulse" cx="0" cy="0" r="7" />
-            </g>
-          </svg>
-          <span class="tour__maplabel">You are here</span>
-        </div>
-
-        <p class="tour__hint" id="tourHint">Scroll to walk in ↓</p>
-      </div>
-    </section>
-
-    <!-- Interactive kitchen -->
-    <section class="showcase" id="kitchen">
-      <div class="showcase__inner">
-        <div class="showcase__copy">
-          <p class="eyebrow">The Ktisis kitchen</p>
-          <h2>Every door, drawer<br />and hinge — engineered.</h2>
-          <ol class="steps" id="steps">
-            <li data-step="0"><strong>Soft-close doors</strong><span>Hettich / Ebco hinges, 110° opening, whisper quiet.</span></li>
-            <li data-step="1"><strong>Profile lighting</strong><span>Warm LED strips under every wall cabinet and in the ledges.</span></li>
-            <li data-step="2"><strong>Tandem drawers</strong><span>Full-extension channels, 40 kg load, cutlery and bottle pull-outs.</span></li>
-            <li data-step="3"><strong>Cook-ready</strong><span>Hob, chimney and electrical points planned in before fabrication.</span></li>
-          </ol>
-          <div class="finishes" id="finishes">
-            <p class="finishes__label">Choose a finish</p>
-            <button class="swatch is-active" data-finish="champagne" style="--sw:linear-gradient(135deg,#e9d9bd,#cdb58e)">Champagne Gloss</button>
-            <button class="swatch" data-finish="white" style="--sw:linear-gradient(135deg,#ffffff,#ececea)">Acrylic White</button>
-            <button class="swatch" data-finish="walnut" style="--sw:repeating-linear-gradient(100deg,#7a4b2b 0 3px,#8e5a36 3px 7px,#6f4426 7px 9px)">Walnut Laminate</button>
-            <button class="swatch" data-finish="teal" style="--sw:#1f4a5a">Teal PU</button>
-          </div>
-        </div>
-
-        <div class="scene" id="scene" data-finish="champagne">
-          <div class="kitchen">
-            <div class="k-wall">
-              <div class="k-backsplash"></div>
-              <div class="k-glow"></div>
-            </div>
-            <div class="k-uppers">
-              <div class="k-cab"><div class="k-door k-door--l"></div></div>
-              <div class="k-cab"><div class="k-door k-door--r"></div></div>
-              <div class="k-hood"><i></i></div>
-              <div class="k-cab"><div class="k-door k-door--l"></div></div>
-              <div class="k-cab"><div class="k-door k-door--r"></div></div>
-            </div>
-            <div class="k-strip"></div>
-            <div class="k-counter">
-              <div class="k-sink"><i class="k-tap"></i></div>
-              <div class="k-hob"><span class="burner"></span><span class="burner"></span><span class="burner"></span><span class="burner"></span></div>
-            </div>
-            <div class="k-base">
-              <div class="k-cab"><div class="k-door k-door--l"></div></div>
-              <div class="k-drawers">
-                <div class="k-drawer"><i></i></div>
-                <div class="k-drawer"><i></i></div>
-                <div class="k-drawer"><i></i></div>
-              </div>
-              <div class="k-oven"><div class="k-oven__glass"></div></div>
-              <div class="k-cab"><div class="k-door k-door--r"></div></div>
-            </div>
-            <div class="k-plinth"></div>
-            <div class="k-floor"></div>
-          </div>
-          <p class="scene__hint">Scroll to open</p>
+      <div class="split">
+        <figure class="chamfer chamfer--lg split__img" data-wipe data-drift>
+          <img src="https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1400&q=80&auto=format&fit=crop" alt="Bright living room with arched windows" loading="lazy" />
+        </figure>
+        <div class="split__copy">
+          <h3 data-chars><span class="line">Build a comfortable</span><span class="line"><em>room</em> around</span><span class="line">the way you live.</span></h3>
+          <p>Wardrobes that take the whole wall, a TV unit with nowhere for cables to show, a kitchen where the bin, the cutlery and the pressure cooker all have a place. Comfort is storage that disappears.</p>
+          <figure class="chamfer chamfer--md" data-wipe>
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=900&q=75&auto=format&fit=crop" alt="Contemporary living room with grey sofa" loading="lazy" />
+          </figure>
+          <ul class="ticks">
+            <li>3D walkthrough before fabrication</li>
+            <li>Branded hardware, soft-close as standard</li>
+            <li>Our own fitters, not subcontractors</li>
+          </ul>
         </div>
       </div>
     </section>
 
     <!-- Services -->
     <section class="services" id="services">
-      <div class="section-head">
-        <p class="eyebrow">What we build</p>
-        <h2 data-split>One studio for the whole home.</h2>
+      <div class="section-head section-head--row">
+        <div>
+          <p class="eyebrow">What we build</p>
+          <h2 data-chars><span class="line">One studio for</span><span class="line"><em>the whole home.</em></span></h2>
+        </div>
+        <p class="lead">Every piece is manufactured in-house, so the finish you choose for the kitchen can run through the wardrobes and the TV unit.</p>
       </div>
-      <div class="cards">
-        <a class="card" href="#contact" data-tilt>
-          <div class="card__img"><img src="assets/img/p1.jpg" alt="Modular kitchen with patterned backsplash and profile lighting" loading="lazy" /></div>
-          <div class="card__body"><span class="card__n">01</span><h3>Modular Kitchens</h3><p>L-shape, U-shape, parallel and island kitchens in acrylic, laminate, PU and veneer.</p></div>
+      <div class="gallery" id="gallery">
+        <a class="gcard is-open" href="#contact">
+          <figure><img src="assets/img/p1.jpg" alt="Modular kitchen with patterned backsplash" loading="lazy" /></figure>
+          <div class="gcard__body"><span class="gcard__n">01</span><h3>Modular Kitchens</h3><p>L-shape, U-shape, parallel and island kitchens in acrylic, laminate, PU and veneer.</p><span class="gcard__arrow">→</span></div>
         </a>
-        <a class="card" href="#contact" data-tilt>
-          <div class="card__img"><img src="assets/img/p6.jpg" alt="Wood-panelled TV unit with backlit ledge" loading="lazy" /></div>
-          <div class="card__body"><span class="card__n">02</span><h3>Living &amp; TV Units</h3><p>Panelled feature walls, floating consoles and concealed wiring.</p></div>
+        <a class="gcard" href="#contact">
+          <figure><img src="assets/img/p6.jpg" alt="Wood-panelled TV unit" loading="lazy" /></figure>
+          <div class="gcard__body"><span class="gcard__n">02</span><h3>Living &amp; TV Units</h3><p>Panelled feature walls, floating consoles and concealed wiring.</p><span class="gcard__arrow">→</span></div>
         </a>
-        <a class="card" href="#contact" data-tilt>
-          <div class="card__img"><img src="assets/img/p7.jpg" alt="Bedroom with upholstered headboard and wardrobe" loading="lazy" /></div>
-          <div class="card__body"><span class="card__n">03</span><h3>Wardrobes &amp; Bedrooms</h3><p>Sliding and hinged wardrobes, headboards, lofts and dressers.</p></div>
+        <a class="gcard" href="#contact">
+          <figure><img src="assets/img/p7.jpg" alt="Bedroom with headboard and wardrobe" loading="lazy" /></figure>
+          <div class="gcard__body"><span class="gcard__n">03</span><h3>Wardrobes &amp; Bedrooms</h3><p>Sliding and hinged wardrobes, headboards, lofts and dressers.</p><span class="gcard__arrow">→</span></div>
         </a>
-        <a class="card" href="#contact" data-tilt>
-          <div class="card__img"><img src="assets/img/p5.jpg" alt="Bathroom vanity with backlit round mirror" loading="lazy" /></div>
-          <div class="card__body"><span class="card__n">04</span><h3>Bath Vanities</h3><p>Moisture-proof vanities, backlit mirrors and storage that lasts.</p></div>
+        <a class="gcard" href="#contact">
+          <figure><img src="assets/img/p5.jpg" alt="Bathroom vanity with backlit mirror" loading="lazy" /></figure>
+          <div class="gcard__body"><span class="gcard__n">04</span><h3>Bath Vanities</h3><p>Moisture-proof vanities, backlit mirrors and storage that lasts.</p><span class="gcard__arrow">→</span></div>
         </a>
-        <a class="card" href="#contact" data-tilt>
-          <div class="card__img"><img src="assets/img/p2.jpg" alt="Living room with false ceiling and TV unit" loading="lazy" /></div>
-          <div class="card__body"><span class="card__n">05</span><h3>Full-Home Interiors</h3><p>False ceilings, lighting, furniture and finishes — one team, one timeline.</p></div>
-        </a>
-        <a class="card" href="#contact" data-tilt>
-          <div class="card__img"><img src="assets/img/p9.jpg" alt="Teal and white modular kitchen with marble backsplash" loading="lazy" /></div>
-          <div class="card__body"><span class="card__n">06</span><h3>Commercial Spaces</h3><p>Offices, clinics and retail fit-outs delivered on a fixed schedule.</p></div>
+        <a class="gcard" href="#contact">
+          <figure><img src="assets/img/p2.jpg" alt="Living room with false ceiling" loading="lazy" /></figure>
+          <div class="gcard__body"><span class="gcard__n">05</span><h3>Full-Home Interiors</h3><p>False ceilings, lighting, furniture and finishes — one team, one timeline.</p><span class="gcard__arrow">→</span></div>
         </a>
       </div>
     </section>
@@ -230,7 +150,7 @@
     <section class="compare" id="compare">
       <div class="section-head">
         <p class="eyebrow">3D design → delivered</p>
-        <h2 data-split>What you approve is what you get.</h2>
+        <h2 data-chars><span class="line">What you approve</span><span class="line"><em>is what you get.</em></span></h2>
         <p class="lead">Every project is modelled in 3D before a single panel is cut. Drag to compare the design view with the installed kitchen.</p>
       </div>
       <div class="ba" id="ba">
@@ -250,7 +170,7 @@
     <section class="process" id="process">
       <div class="section-head">
         <p class="eyebrow">How it works</p>
-        <h2 data-split>From site visit to handover.</h2>
+        <h2 data-chars><span class="line">From site visit</span><span class="line"><em>to handover.</em></span></h2>
       </div>
       <div class="timeline">
         <svg class="timeline__svg" viewBox="0 0 4 1000" preserveAspectRatio="none" aria-hidden="true">
@@ -279,7 +199,7 @@
     <section class="portfolio" id="portfolio">
       <div class="portfolio__head">
         <p class="eyebrow">Recent projects</p>
-        <h2>Selected work in Kochi</h2>
+        <h2 data-chars><span class="line">Selected work <em>in Kochi</em></span></h2>
         <p class="portfolio__hint">Keep scrolling →</p>
       </div>
       <div class="hscroll" id="hscroll">
@@ -307,7 +227,7 @@
     <section class="contact" id="contact">
       <div class="contact__copy">
         <p class="eyebrow">Free site visit</p>
-        <h2 data-split>Let’s design your kitchen.</h2>
+        <h2 data-chars><span class="line">Let’s design</span><span class="line"><em>your kitchen.</em></span></h2>
         <p class="lead">A designer visits, measures, and returns with a 3D concept and itemised quote. No obligation.</p>
         <ul class="contact__meta">
           <li><span>Studio</span>Kochi, Kerala, India</li>
@@ -333,16 +253,25 @@
         </div>
       </form>
     </section>
+    <section class="collab" id="collab">
+      <h2 data-chars><span class="line">Ready to build</span><span class="line"><em>your home</em> with us?</span></h2>
+      <div class="collab__meta">
+        <div><span>Address</span>Kochi, Kerala, India</div>
+        <div><span>Contact</span><a href="tel:+919847782499">+91 98477 82499</a><br /><a href="mailto:ktisisinteriors744@gmail.com">ktisisinteriors744@gmail.com</a></div>
+        <div><span>Office hours</span>Mon–Fri 9–6 · Sat 10–4</div>
+      </div>
+      <div class="collab__mark" aria-hidden="true"><span>✺</span>KTISIS</div>
+    </section>
   </main>
 
   <footer class="footer">
     <div class="footer__brand">Ktisis<em>Interiors</em><p>Modular kitchens &amp; home interiors, designed and built in Kochi since 2010.</p></div>
     <div class="footer__cols">
-      <div><h4>Studio</h4><a href="#kitchen">Kitchens</a><a href="#services">Interiors</a><a href="#portfolio">Projects</a></div>
+      <div><h4>Studio</h4><a href="#services">Interiors</a><a href="#portfolio">Projects</a></div>
       <div><h4>Company</h4><a href="#process">Process</a><a href="#about">About</a><a href="#contact">Contact</a></div>
       <div><h4>Follow</h4><a href="https://instagram.com/ktisis_interiors/" target="_blank" rel="noopener">Instagram</a><a href="https://facebook.com/ktisisinteriors" target="_blank" rel="noopener">Facebook</a><a href="https://wa.me/919947386281" target="_blank" rel="noopener">WhatsApp</a></div>
     </div>
-    <p class="footer__legal">© 2026 Ktisis Interiors, Kochi. All rights reserved. Hero, walkthrough and comparison photos via <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a>; project photos are our own work.</p>
+    <p class="footer__legal">© 2026 Ktisis Interiors, Kochi. All rights reserved. Hero and comparison photos via <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a>; project photos are our own work.</p>
   </footer>
 
   <a class="wa" href="https://wa.me/919947386281?text=Hi%20Ktisis%2C%20I%27d%20like%20a%20free%20site%20visit." target="_blank" rel="noopener" aria-label="Chat on WhatsApp" data-magnetic>

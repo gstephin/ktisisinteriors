@@ -37,13 +37,39 @@
   /* ------------------------------------------------------------------ */
   /* Split headlines into words → inner spans for masked reveals         */
   /* ------------------------------------------------------------------ */
-  $$('[data-split]').forEach((el) => {
-    el.innerHTML = el.textContent
-      .trim()
-      .split(/\s+/)
-      .map((w) => `<span class="w"><i>${w}</i></span>`)
-      .join(' ');
-  });
+  const splitChars = (node) => {
+    Array.from(node.childNodes).forEach((n) => {
+      if (n.nodeType === 3) {
+        // Words stay unbreakable; characters inside animate individually.
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach((tok) => {
+          if (!tok) return;
+          if (/^\s+$/.test(tok)) { frag.appendChild(document.createTextNode(' ')); return; }
+          const w = document.createElement('span');
+          w.className = 'wd';
+          for (const ch of tok) {
+            const sp = document.createElement('span');
+            sp.className = 'ch';
+            sp.textContent = ch;
+            w.appendChild(sp);
+          }
+          frag.appendChild(w);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) {
+        if (n.matches('.pill, .orb, .star')) n.classList.add('ch');
+        else splitChars(n);
+      }
+    });
+  };
+  $$('[data-chars] .line').forEach(splitChars);
+  $$('[data-chars]').forEach((el) => gsap.set($$('.ch', el), { yPercent: 115, opacity: 0, filter: 'blur(6px)' }));
+  $$('[data-wipe]').forEach((f) => { gsap.set(f, { clipPath: 'inset(0 100% 0 0)' }); gsap.set($('img', f), { scale: 1.18 }); });
+  $$('[data-pill]').forEach((p) => gsap.set(p, { width: 0 }));
+  const charsIn = (el, delay = 0) => gsap.to($$('.ch', typeof el === 'string' ? $(el) : el), { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'power4.out', stagger: 0.014, delay });
+  const wipeIn = (f, delay = 0) => gsap.timeline({ delay })
+    .to(f, { clipPath: 'inset(0 0% 0 0)', duration: 1.3, ease: 'power4.inOut' })
+    .to($('img', f), { scale: 1, duration: 1.6, ease: 'power3.out' }, 0.1);
 
   /* ------------------------------------------------------------------ */
   /* Preloader → hero intro                                              */
@@ -51,11 +77,10 @@
   const hero = $('#hero');
   const intro = gsap.timeline({ paused: true });
   intro
-    .to('.hero__img', { scale: 1, duration: 2.4, ease: 'power2.out' }, 0)
-    .to('.hero__title .w > i', { y: 0, duration: 1.1, ease: 'power4.out', stagger: 0.06 }, 0.1)
-    .to('#hero .reveal-up', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.12 }, 0.4)
-    .to('#lightswitch', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.9)
-    .to('.wa', { scale: 1, duration: 0.6, ease: 'back.out(2)' }, 1.1);
+    .add(charsIn('.hero__title'), 0)
+    .to('#hero .reveal-up', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.12 }, 0.5);
+  $$('#hero [data-wipe]').forEach((f, i) => intro.add(wipeIn(f), 0.2 + i * 0.15));
+  intro.to('.wa', { scale: 1, duration: 0.6, ease: 'back.out(2)' }, 1.2);
 
   const pre = $('#preloader');
   if (reduce || !pre) {
@@ -76,27 +101,17 @@
       .to(pre, { yPercent: -100, duration: 0.9, ease: 'power4.inOut' }, '+=0.15');
   }
 
-  // Hero parallax on scroll
-  if (!reduce) {
-    gsap.to('.hero__media', {
-      yPercent: 18,
-      ease: 'none',
-      scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
-    });
-    gsap.to('.hero__content', {
-      yPercent: -10,
-      opacity: 0.2,
-      ease: 'none',
-      scrollTrigger: { trigger: hero, start: '30% top', end: 'bottom top', scrub: true },
+  // Hero visual follows the pointer a little
+  const pv = $('[data-parallax]');
+  if (pv && finePointer && !reduce) {
+    const px = gsap.quickTo(pv, 'x', { duration: 0.8, ease: 'power3' });
+    const py = gsap.quickTo(pv, 'y', { duration: 0.8, ease: 'power3' });
+    hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      px(((e.clientX - r.left) / r.width - 0.5) * -18);
+      py(((e.clientY - r.top) / r.height - 0.5) * -14);
     });
   }
-
-  // Light switch
-  $('#lightswitch')?.addEventListener('click', function () {
-    const lit = hero.classList.toggle('is-lit');
-    this.setAttribute('aria-pressed', String(lit));
-    $('.lightswitch__label', this).textContent = lit ? 'Lights on' : 'Turn on the lights';
-  });
 
   /* ------------------------------------------------------------------ */
   /* Nav                                                                 */
@@ -123,232 +138,28 @@
   /* ------------------------------------------------------------------ */
   /* Section headline reveals                                            */
   /* ------------------------------------------------------------------ */
-  $$('[data-split]').forEach((el) => {
+  $$('[data-chars]').forEach((el) => {
     if (el.closest('#hero')) return;
-    gsap.to($$('.w > i', el), {
-      y: 0,
-      duration: 1,
-      ease: 'power4.out',
-      stagger: 0.05,
-      scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-    });
+    ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true, onEnter: () => charsIn(el) });
   });
-  $$('.lead, .steps, .finishes, .contact__meta').forEach((el) => {
+  $$('[data-wipe]').forEach((f) => {
+    if (f.closest('#hero')) return;
+    ScrollTrigger.create({ trigger: f, start: 'top 85%', once: true, onEnter: () => wipeIn(f) });
+  });
+  $$('[data-pill]').forEach((p) => {
+    ScrollTrigger.create({ trigger: p, start: 'top 85%', once: true, onEnter: () => gsap.to(p, { width: '1.7em', duration: 0.9, ease: 'power4.out', delay: 0.4 }) });
+  });
+  if (!reduce) {
+    $$('[data-drift]').forEach((el) => gsap.fromTo(el, { yPercent: 6 }, { yPercent: -6, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } }));
+  }
+  // Hover-expand gallery
+  const gallery = $('#gallery');
+  if (gallery) {
+    $$('.gcard', gallery).forEach((c) => c.addEventListener('pointerenter', () => $$('.gcard', gallery).forEach((x) => x.classList.toggle('is-open', x === c))));
+  }
+  $$('.lead, .steps, .finishes, .contact__meta, .split__copy > p, .ticks, .collab__meta').forEach((el) => {
     gsap.from(el, { opacity: 0, y: 24, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
   });
-
-  /* ------------------------------------------------------------------ */
-  /* Apartment walkthrough — first-person camera through CSS-3D rooms    */
-  /* ------------------------------------------------------------------ */
-  const stage = $('#tourStage');
-  if (stage) {
-    const world = $('#tourWorld');
-    const rooms = $$('.room', world);
-    const caption = $('#tourCaption');
-    const man = $('#tourMan');
-    const path = $('#tourPath');
-    const pathLen = path.getTotalLength();
-    const mapRooms = $$('#tourMap rect');
-    const captions = {
-      entry: ['00', 'Welcome home', 'Scroll to open the door and walk through a Ktisis 2 BHK.'],
-      living: ['01', 'Living room', 'Built-in TV wall with display niches, cove-lit false ceiling and concealed wiring.'],
-      bed: ['02', 'Bedroom 1', 'Headboard wall with wall lamps, bedside units and full-height wardrobes built to the room.'],
-      kitchen: ['03', 'Kitchen & dining', 'Handleless modular kitchen with a breakfast island, bar seating and task lighting.'],
-    };
-
-    // Geometry: rooms are stacked along -Z; each room owns its depth and door position.
-    let W = 0;
-    const layout = () => {
-      W = stage.clientWidth;
-      const H = stage.clientHeight;
-      world.style.setProperty('--sw', `${W}px`);
-      world.style.setProperty('--sh', `${H}px`);
-      const mobile = W < 600; // portrait: wider doors, shorter rooms
-      let z = 0;
-      rooms.forEach((r) => {
-        const d = Math.round(+r.dataset.depth * (mobile ? 0.7 : 1));
-        r._z = z;
-        r._d = d;
-        r.style.setProperty('--d', `${d}px`);
-        r.style.setProperty('--z', `${z}px`);
-        if (r.dataset.door) {
-          const dx = +r.dataset.door;
-          const dw = mobile ? Math.max(+r.dataset.doorw, 0.44) : +r.dataset.doorw;
-          const dh = mobile ? 0.58 : +r.dataset.doorh;
-          const L = (dx - dw / 2) * 100, R = (dx + dw / 2) * 100, T = (1 - dh) * 100;
-          $('.wall--back', r).style.clipPath =
-            `polygon(0 0, 100% 0, 100% 100%, ${R}% 100%, ${R}% ${T}%, ${L}% ${T}%, ${L}% 100%, 0 100%)`;
-          r.style.setProperty('--dl', `${L}%`);
-          r.style.setProperty('--dw', `${dw * 100}%`);
-          r.style.setProperty('--dh', `${dh * 100}%`);
-          r._doorX = (dx - 0.5) * W;
-          // Walking "through" = the wall scales up past the eye; drop it once the
-          // doorway is wider than the viewport: s = p/(p - z) >= 1.05/dw.
-          const persp = parseFloat(getComputedStyle(stage).perspective) || 900;
-          r._hideZ = persp * (1 - dw / 1.05);
-        } else {
-          r._hideZ = 0;
-        }
-        z -= d;
-      });
-    };
-    layout();
-    ScrollTrigger.addEventListener('refreshInit', layout);
-
-    const cam = { x: 0, z: 0 };
-    let current = null;
-    let walkTimer;
-    const render = () => {
-      // Head bob keyed to distance walked, so it reads as steps, not a wobble.
-      const bob = reduce ? 0 : Math.sin(cam.z / 55) * 5;
-      world.style.transform = `translate3d(${-cam.x}px, ${bob}px, ${-cam.z}px)`;
-      rooms.forEach((r) => {
-        const backZ = r._z - r._d;
-        r.classList.toggle('is-passed', cam.z < backZ); // side planes now fully behind the eye
-        r.style.visibility = cam.z < backZ - r._hideZ - 20 ? 'hidden' : '';
-      });
-      // Caption flips a few steps before an open-plan wall dissolves, so it matches what you see.
-      const room = rooms.find((r) => cam.z <= r._z + 1 && cam.z > r._z - r._d + (r.dataset.door ? 0 : 320)) || rooms[rooms.length - 1];
-      if (room !== current) {
-        current = room;
-        const [n, h, p] = captions[room.dataset.name];
-        caption.classList.remove('is-switching');
-        void caption.offsetWidth; // restart the caption animation
-        caption.classList.add('is-switching');
-        $('.tour__n', caption).textContent = n;
-        $('h3', caption).textContent = h;
-        $('p', caption).textContent = p;
-        mapRooms.forEach((rc) => rc.classList.toggle('is-here', rc.dataset.room === room.dataset.name));
-      }
-    };
-
-    if (reduce) {
-      rooms.forEach((r) => r.style.setProperty('--lit', 1));
-      $$('.door__panel', world).forEach((d) => (d.style.transform = 'rotateY(100deg)'));
-      cam.z = rooms[1]._z - rooms[1]._d * 0.4;
-      render();
-    } else {
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: '#tour',
-          start: 'top top',
-          end: () => `+=${rooms.length * 1500}`,
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate(self) {
-            render();
-            // minimap walker follows the route in step with scroll
-            const pt = path.getPointAtLength(pathLen * self.progress);
-            man.setAttribute('transform', `translate(${pt.x} ${pt.y})`);
-            man.classList.add('is-walking');
-            clearTimeout(walkTimer);
-            walkTimer = setTimeout(() => man.classList.remove('is-walking'), 180);
-            $('#tourHint').style.opacity = self.progress > 0.03 ? 0 : 1;
-          },
-        },
-      });
-
-      rooms.forEach((r, i) => {
-        const last = i === rooms.length - 1;
-        const label = `room${i}`;
-        tl.addLabel(label);
-        // Lights come on as you step in.
-        tl.to(r, { '--lit': 1, duration: 0.6, ease: 'power2.out' }, label);
-        if (r.dataset.door && !last) {
-          // Entrance: walk up to the front door, it swings away, step through.
-          tl.to(cam, { z: () => r._z - r._d + 260, x: () => r._doorX, duration: 2 }, label);
-          tl.to($('.door__panel', r), { rotateY: 100, duration: 0.9, ease: 'power2.inOut' }, `${label}+=1.1`);
-          tl.to(cam, { z: () => r._z - r._d - r._hideZ - 60, duration: 0.9 }, `${label}+=2`);
-          tl.to($('.door__panel', r), { opacity: 0, duration: 0.2 }, `${label}+=2.1`);
-        } else if (!last) {
-          // Open-plan rooms: walk to the far wall; it dissolves as you reach it
-          // and the next room is already lit beyond.
-          tl.to(cam, { z: () => r._z - r._d + 320, x: 0, duration: 2 }, label);
-          tl.to($('.wall--back', r), { opacity: 0, duration: 0.7, ease: 'power2.in' }, `${label}+=1.5`);
-          tl.to(rooms[i + 1], { '--lit': 1, duration: 0.6, ease: 'power2.out' }, `${label}+=1.5`);
-          tl.to(cam, { z: () => r._z - r._d - 40, duration: 0.5 }, `${label}+=2`);
-        } else {
-          // Final room: walk to the island and settle in the middle.
-          tl.to(cam, { z: () => r._z - r._d + 190, x: 0, duration: 2.2 }, label);
-          tl.to({}, { duration: 0.5 });
-        }
-      });
-      render();
-    }
-  }
-
-  /* ------------------------------------------------------------------ */
-  /* Kitchen showcase — scrubbed timeline                                */
-  /* ------------------------------------------------------------------ */
-  const steps = $$('#steps li');
-  const setStep = (i) => steps.forEach((li, k) => li.classList.toggle('is-active', k === i));
-
-  if ($('#kitchen')) {
-    const isMobile = window.matchMedia('(max-width: 900px)').matches;
-    const tl = gsap.timeline({
-      defaults: { ease: 'power2.inOut' },
-      scrollTrigger: {
-        trigger: '#kitchen',
-        start: isMobile ? 'top 70%' : 'top top',
-        end: isMobile ? 'bottom 60%' : '+=2600',
-        scrub: 1.2,
-        pin: !isMobile,
-        anticipatePin: 1,
-        onUpdate(self) {
-          const p = self.progress;
-          setStep(p < 0.28 ? 0 : p < 0.5 ? 1 : p < 0.78 ? 2 : 3);
-        },
-      },
-    });
-
-    tl.addLabel('doors')
-      .to('.k-uppers .k-door--l', { rotateY: -108, duration: 1.2, stagger: 0.12 }, 'doors')
-      .to('.k-uppers .k-door--r', { rotateY: 108, duration: 1.2, stagger: 0.12 }, 'doors+=0.15')
-      .addLabel('light', '>-0.3')
-      .to('.k-glow', { opacity: 1, duration: 0.8 }, 'light')
-      .to('.k-strip', { backgroundColor: '#f2c98a', boxShadow: '0 6px 24px rgba(255,200,120,.65)', duration: 0.8 }, 'light')
-      .addLabel('drawers', '>')
-      .to('.k-drawer', { z: 110, boxShadow: '0 30px 40px -10px rgba(0,0,0,.6)', duration: 1.2, stagger: 0.18 }, 'drawers')
-      .to('.k-drawer i', { opacity: 1, duration: 0.5, stagger: 0.18 }, 'drawers+=0.2')
-      .to('.k-base .k-door--l', { rotateY: -100, duration: 1 }, 'drawers+=0.3')
-      .to('.k-base .k-door--r', { rotateY: 100, duration: 1 }, 'drawers+=0.45')
-      .addLabel('cook', '>')
-      .call(() => $('.k-hob').classList.add('is-on'), null, 'cook')
-      .call(() => $('.k-oven').classList.add('is-on'), null, 'cook+=0.2')
-      .to('.scene__hint', { opacity: 0, duration: 0.3 }, 'cook')
-      .to({}, { duration: 0.8 });
-
-    // Hob/oven switch off when scrolling back up past the cook label
-    tl.eventCallback('onReverseComplete', () => {
-      $('.k-hob').classList.remove('is-on');
-      $('.k-oven').classList.remove('is-on');
-    });
-    ScrollTrigger.create({
-      trigger: '#kitchen',
-      start: 'top top',
-      end: '+=2600',
-      onUpdate(self) {
-        if (self.progress < 0.78) {
-          $('.k-hob').classList.remove('is-on');
-          $('.k-oven').classList.remove('is-on');
-        }
-      },
-    });
-    setStep(0);
-
-    // Finish picker
-    const scene = $('#scene');
-    $$('.swatch').forEach((b) => {
-      b.addEventListener('click', () => {
-        $$('.swatch').forEach((x) => x.classList.toggle('is-active', x === b));
-        scene.dataset.finish = b.dataset.finish;
-        gsap.fromTo('.k-door, .k-drawer', { filter: 'brightness(1.6)' }, { filter: 'brightness(1)', duration: 0.9, ease: 'power2.out', stagger: 0.03 });
-      });
-    });
-  }
 
   /* ------------------------------------------------------------------ */
   /* Service cards — reveal + 3D tilt                                    */
@@ -517,7 +328,7 @@
     const rx = gsap.quickTo(ring, 'x', { duration: 0.35, ease: 'power3' });
     const ry = gsap.quickTo(ring, 'y', { duration: 0.35, ease: 'power3' });
     window.addEventListener('pointermove', (e) => { dx(e.clientX); dy(e.clientY); rx(e.clientX); ry(e.clientY); });
-    $$('a, button, .swatch, .ba__range').forEach((el) => {
+    $$('a, button, .ba__range').forEach((el) => {
       el.addEventListener('pointerenter', () => cur.classList.add('is-hover'));
       el.addEventListener('pointerleave', () => cur.classList.remove('is-hover'));
     });
